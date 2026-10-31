@@ -1,6 +1,6 @@
-# Bulgaristan Vatandaşlık Takip
+# Bulgarian Citizenship Status WhatsApp
 
-**İstediğin aralıkta otomatik takip ve WhatsApp bildirimi.**
+**Bulgaristan Vatandaşlık Takip: istediğin aralıkta otomatik takip ve WhatsApp bildirimi.**
 
 Bulgaristan vatandaşlık başvurularının (en fazla 10) durumunu Adalet Bakanlığı sayfasından ([publicbg.mjs.bg](https://publicbg.mjs.bg/BgInfo/Home/Enroll)) kendisi sorgulayan Chrome / Brave eklentisi. Durum değişince bildirim gösterir, istersen seçtiğin WhatsApp numaralarına ve gruplarına mesaj atar.
 
@@ -9,24 +9,24 @@ Bulgaristan vatandaşlık başvurularının (en fazla 10) durumunu Adalet Bakanl
 ## İndir
 
 ```text
-https://github.com/lones8888/bulgaristan-vatandaslik-takip/releases/latest/download/bulgaristan-vatandaslik-takip.zip
+https://github.com/lones8888/bulgarian-citizenship-status-whatsapp/releases/latest/download/bulgarian-citizenship-status-whatsapp.zip
 ```
 
 Windows'ta tek satırla: normal PowerShell aç (yönetici gerekmez) ve yapıştır:
 
 ```powershell
-irm https://raw.githubusercontent.com/lones8888/bulgaristan-vatandaslik-takip/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/lones8888/bulgarian-citizenship-status-whatsapp/main/install.ps1 | iex
 ```
 
-Bu satır eklentiyi masaüstündeki `bulgaristan-vatandaslik-takip` klasörüne çıkarır. Sonra aşağıdaki 3. adımdan devam et.
+Bu satır eklentiyi masaüstündeki `bulgarian-citizenship-status-whatsapp` klasörüne çıkarır. Sonra aşağıdaki 3. adımdan devam et.
 
 ## Adım adım kurulum (Chrome / Brave)
 
 1. Zip'i indir ve aç.
-2. İçindeki **bulgaristan-vatandaslik-takip** klasörünü masaüstüne koy. Sonra bu klasörü silme, taşıma.
+2. İçindeki **bulgarian-citizenship-status-whatsapp** klasörünü masaüstüne koy. Sonra bu klasörü silme, taşıma.
 3. Tarayıcının adres çubuğuna `chrome://extensions` yaz (Brave'de `brave://extensions`).
 4. Sağ üstteki **Geliştirici modu**nu aç.
-5. **Paketlenmemiş öğe yükle**'ye bas ve **bulgaristan-vatandaslik-takip** klasörünü seç.
+5. **Paketlenmemiş öğe yükle**'ye bas ve **bulgarian-citizenship-status-whatsapp** klasörünü seç.
 6. Eklenti simgesine bas → **Ayarlar**: başvuru numaralarını ve PIN'leri yaz, kontrol aralığını ve saati seç → **Bilgileri kaydet**.
 7. **Tümünü şimdi kontrol et** ile ilk sorguyu yap.
 
@@ -44,7 +44,7 @@ Bu satır eklentiyi masaüstündeki `bulgaristan-vatandaslik-takip` klasörüne 
 - İnsan doğrulamasını (Cloudflare) eklenti çözmez: sekmeyi öne getirir, sen tamamlarsın. Geçici hatada 15 dakika, 1 saat ve 3 saat sonra yeniden dener.
 - PIN'ler sadece bu tarayıcıda saklanır ve sadece Bakanlık sayfasına gönderilir.
 
-Ayrıntılı kılavuz: [KURULUM.txt](bulgaristan-vatandaslik-takip/KURULUM.txt)
+Ayrıntılı kılavuz: [KURULUM.txt](bulgarian-citizenship-status-whatsapp/KURULUM.txt)
 
 ---
 
@@ -57,22 +57,22 @@ Chrome / Brave extension that checks the status of up to 10 Bulgarian citizenshi
 **Download** (always the latest version):
 
 ```text
-https://github.com/lones8888/bulgaristan-vatandaslik-takip/releases/latest/download/bulgaristan-vatandaslik-takip.zip
+https://github.com/lones8888/bulgarian-citizenship-status-whatsapp/releases/latest/download/bulgarian-citizenship-status-whatsapp.zip
 ```
 
 One line on Windows (normal PowerShell, no administrator needed):
 
 ```powershell
-irm https://raw.githubusercontent.com/lones8888/bulgaristan-vatandaslik-takip/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/lones8888/bulgarian-citizenship-status-whatsapp/main/install.ps1 | iex
 ```
 
 ### Step-by-step install (Chrome / Brave)
 
 1. Download the zip and extract it.
-2. Put the **bulgaristan-vatandaslik-takip** folder on your Desktop. Do not delete or move it later.
+2. Put the **bulgarian-citizenship-status-whatsapp** folder on your Desktop. Do not delete or move it later.
 3. Type `chrome://extensions` in the address bar (Brave: `brave://extensions`).
 4. Turn on **Developer mode** (top right).
-5. Click **Load unpacked** and select the **bulgaristan-vatandaslik-takip** folder.
+5. Click **Load unpacked** and select the **bulgarian-citizenship-status-whatsapp** folder.
 6. Click the extension icon → **Ayarlar** (Settings): enter the application numbers and PINs, choose the interval and time → **Bilgileri kaydet** (Save).
 7. Press **Tümünü şimdi kontrol et** (Check all now) for the first check.
 
@@ -96,4 +96,4 @@ irm https://raw.githubusercontent.com/lones8888/bulgaristan-vatandaslik-takip/ma
 
 ## Lisans / License
 
-MIT – [LICENSE](LICENSE). `bulgaristan-vatandaslik-takip/vendor/wppconnect-wa.js` is WPPConnect WA-JS 4.7.2, Apache-2.0 (`vendor/LICENSE-WAJS.txt`, `vendor/NOTICE-WAJS.txt`).
+MIT – [LICENSE](LICENSE). `bulgarian-citizenship-status-whatsapp/vendor/wppconnect-wa.js` is WPPConnect WA-JS 4.7.2, Apache-2.0 (`vendor/LICENSE-WAJS.txt`, `vendor/NOTICE-WAJS.txt`).

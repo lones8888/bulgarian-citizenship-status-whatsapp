@@ -1,11 +1,11 @@
-# Bulgaristan Vatandaslik Takip - one-line download for Chrome / Brave (no installer):
-#   irm https://raw.githubusercontent.com/lones8888/bulgaristan-vatandaslik-takip/main/install.ps1 | iex
-# Downloads the latest release and extracts the extension to Desktop\bulgaristan-vatandaslik-takip.
+# Bulgarian Citizenship Status WhatsApp (Bulgaristan Vatandaslik Takip) - one-line download for Chrome / Brave (no installer):
+#   irm https://raw.githubusercontent.com/lones8888/bulgarian-citizenship-status-whatsapp/main/install.ps1 | iex
+# Downloads the latest release and extracts the extension to Desktop\bulgarian-citizenship-status-whatsapp.
 # Updating uses the same folder, so settings and PINs are kept (then click Reload on the extension card).
-function Install-BulgaristanVatandaslikTakip {
+function Install-BulgarianCitizenshipStatus {
     $ErrorActionPreference = 'Stop'
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $name = 'bulgaristan-vatandaslik-takip'
+    $name = 'bulgarian-citizenship-status-whatsapp'
     $url = "https://github.com/lones8888/$name/releases/latest/download/$name.zip"
     $target = Join-Path ([Environment]::GetFolderPath('Desktop')) $name
     $update = Test-Path -LiteralPath (Join-Path $target 'manifest.json')
@@ -32,4 +32,4 @@ function Install-BulgaristanVatandaslikTakip {
         Write-Host 'Next steps: open chrome://extensions (copied), turn on Developer mode, Load unpacked > select the folder above.'
     }
 }
-Install-BulgaristanVatandaslikTakip
+Install-BulgarianCitizenshipStatus

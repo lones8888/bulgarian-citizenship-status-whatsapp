@@ -1,16 +1,16 @@
-Bulgaristan Vatandaşlık Takip — 1.2.7
+Bulgaristan Vatandaşlık Takip — 1.2.8
 
 Masaüstü Google Chrome ve Brave için hazırlanmış yerel eklenti.
 API anahtarı veya ücretli bir servis gerektirmez.
 
 BAŞKA BİLGİSAYARA KURULUM
 1. ZIP dosyasını açın.
-2. İçindeki bulgaristan-vatandaslik-takip klasörünü kalıcı bir yere koyun.
+2. İçindeki bulgarian-citizenship-status-whatsapp klasörünü kalıcı bir yere koyun.
    Kurduktan sonra bu klasörü silmeyin veya taşımayın.
 3. Chrome'da chrome://extensions/ veya Brave'de brave://extensions/ açın.
 4. Geliştirici modu seçeneğini açın.
 5. Paketlenmemiş öğe yükle düğmesine basın.
-6. manifest.json dosyasının bulunduğu bulgaristan-vatandaslik-takip klasörünü seçin.
+6. manifest.json dosyasının bulunduğu bulgarian-citizenship-status-whatsapp klasörünü seçin.
    ZIP dosyasını veya manifest.json dosyasını tek başına seçmeyin.
 7. Eklenti simgesine basıp küçük listeden Ayarlar düğmesine basın.
    Ayar ekranında en fazla on başvuru numarası ve ilgili PIN'leri girin.
@@ -141,3 +141,4 @@ yoktur. Aynı dosya başarıyla sorgulanana kadar bu mesaj tekrar gönderilmez.
 
 AD DEĞİŞİKLİĞİ (1.2.7)
 Eklentinin adı Bulgaristan Vatandaşlık Takip oldu. Çalışma biçimi ve ayarlar aynı.
+GitHub: github.com/lones8888/bulgarian-citizenship-status-whatsapp (1.2.8: klasör ve zip adı bu oldu).
