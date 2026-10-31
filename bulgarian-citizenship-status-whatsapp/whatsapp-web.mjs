@@ -1,5 +1,6 @@
 // Uses only the user's existing WhatsApp Web session. No relay, linked device or remote code.
-import {turkceDurum} from './core.mjs';
+import {durumCevirisi} from './core.mjs';
+import {t, yerel} from './i18n.mjs';
 export const WHATSAPP_ORIGIN = 'https://web.whatsapp.com/*';
 const HOME = 'https://web.whatsapp.com/';
 const VENDOR = 'vendor/wppconnect-wa.js';
@@ -238,20 +239,18 @@ function eventData(event) {
   if (kind === 'hata') {
     const planned = typeof event.nextDueAt === 'number' && Number.isFinite(event.nextDueAt)
       && !Number.isNaN(new Date(event.nextDueAt).getTime())
-      ? new Date(event.nextDueAt).toLocaleString('tr-TR', {timeZone: 'Europe/Istanbul'})
-      : 'eklentideki takvime göre';
-    const neden = event.failureReason === 'elle'
-      ? 'Otomatik kontrol bunu kendisi düzeltemez (site cevabı beklenenden farklı ya da PIN kabul edilmedi).\nElle kontrol gerekli: https://publicbg.mjs.bg/BgInfo/Home/Enroll'
-      : 'İlk kontrol ve 3 otomatik tekrarda sonuç alınamadı.';
-    const text = `⚠️ Bulgaristan başvurusu kontrol edilemedi\nDosya: ${event.applicationNumber}\n${neden}\nSonraki planlı kontrol: ${planned}`;
+      ? new Date(event.nextDueAt).toLocaleString(yerel(), {timeZone: 'Europe/Istanbul'})
+      : t('msg_per_schedule');
+    const neden = event.failureReason === 'elle' ? t('msg_reason_manual') : t('msg_reason_retries');
+    const text = `${t('msg_fail_title')}\n${t('msg_file')}: ${event.applicationNumber}\n${neden}\n${t('msg_next_planned')}: ${planned}`;
     return {id: event.id, senderPhone, phones, groups, text, same: false};
   }
-  const date = new Date(when).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' });
-  const baslik = { degisti: ['📄 Bulgaristan başvuru durumu değişti', 'Yeni durum'],
-    ilk: ['📄 Bulgaristan vatandaşlık takibi başladı', 'Şu anki durum'],
-    ayni: ['📄 Bulgaristan başvuru durumu: değişiklik yok', 'Durum'] }[kind];
-  const turkce = turkceDurum(status) || 'Türkçe karşılığı tanımlı değil; resmî metin aşağıda.';
-  const text = `${baslik[0]}\nDosya: ${event.applicationNumber}\nKontrol: ${date}\n\n${baslik[1]}:\n${turkce}\n\nResmî metin (Bulgarca):\n${status}`;
+  const date = new Date(when).toLocaleString(yerel(), { timeZone: 'Europe/Istanbul' });
+  const baslik = { degisti: [t('msg_changed'), t('msg_new_status')],
+    ilk: [t('msg_started'), t('msg_current')],
+    ayni: [t('msg_same'), t('msg_status')] }[kind];
+  const ceviri = durumCevirisi(status) || t('msg_no_translation');
+  const text = `${baslik[0]}\n${t('msg_file')}: ${event.applicationNumber}\n${t('msg_checked')}: ${date}\n\n${baslik[1]}:\n${ceviri}\n\n${t('msg_official')}:\n${status}`;
   return { id: event.id, senderPhone, phones, groups, text, same: kind === 'degisti' && status === before };
 }
 
@@ -329,8 +328,8 @@ export async function sendWebTest(config, recipients = null) {
     const plan = await execute(tabId, 'prepare', { id: `test-${crypto.randomUUID()}`, senderPhone, phones, groups });
     if (!plan?.ok) return failure(plan?.error || 'whatsapp_target_invalid', plan?.retryable !== false);
     if (!Array.isArray(plan.deliveries) || !plan.deliveries.length || !plan.deliveries.every(validDelivery)) return failure('whatsapp_target_invalid', false);
-    const date = new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' });
-    const text = `🧪 Bulgaristan Vatandaşlık Takip\nWhatsApp deneme mesajı (${date}).\nBaşvuru durumu değişince bildirimler bu yoldan gelecek.`;
+    const date = new Date().toLocaleString(yerel(), { timeZone: 'Europe/Istanbul' });
+    const text = t('msg_test', { date });
     let sent = 0;
     for (const delivery of plan.deliveries) {
       const result = await execute(tabId, 'deliver', { senderPhone, delivery: { kind: delivery.kind, jid: delivery.jid, messageId: delivery.messageId }, text, allowSend: true });

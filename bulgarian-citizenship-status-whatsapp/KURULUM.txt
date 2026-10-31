@@ -1,4 +1,4 @@
-Bulgaristan Vatandaşlık Takip — 1.2.8
+Bulgaristan Vatandaşlık Takip — 1.3.0
 
 Masaüstü Google Chrome ve Brave için hazırlanmış yerel eklenti.
 API anahtarı veya ücretli bir servis gerektirmez.
@@ -142,3 +142,9 @@ yoktur. Aynı dosya başarıyla sorgulanana kadar bu mesaj tekrar gönderilmez.
 AD DEĞİŞİKLİĞİ (1.2.7)
 Eklentinin adı Bulgaristan Vatandaşlık Takip oldu. Çalışma biçimi ve ayarlar aynı.
 GitHub: github.com/lones8888/bulgarian-citizenship-status-whatsapp (1.2.8: klasör ve zip adı bu oldu).
+
+DİL (1.3.0)
+Eklenti İngilizce ve Türkçe çalışır. Yeni kurulum İngilizce açılır.
+Dili küçük penceredeki EN / TR düğmesinden ya da Ayarlar'ın sağ üstündeki Dil seçiminden değiştirin.
+Masaüstü bildirimleri ve WhatsApp mesajları da seçilen dilde gider.
+Önceki sürümden güncellenen kurulum Türkçe kalır (WhatsApp mesajları habersiz değişmesin diye).

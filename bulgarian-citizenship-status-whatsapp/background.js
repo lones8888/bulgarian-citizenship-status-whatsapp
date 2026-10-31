@@ -3,6 +3,7 @@ import {validateWhatsappConfig, normalizeRecipients, groupKey, whatsappTargetKey
   makeQueryFailureEvent, retryDelayMs, WHATSAPP_PERMISSION, whatsappErrorMessage} from './whatsapp.mjs';
 import {checkWebStatus, sendWebEvent, sendWebTest} from './whatsapp-web.mjs';
 import {nextQueryRetryAt} from './query-retry.mjs';
+import {t, dilAyarla, yerel} from './i18n.mjs';
 
 const TARGET = 'https://publicbg.mjs.bg/BgInfo/Home/Enroll';
 const MONTHLY = 'monthly-check';
@@ -19,7 +20,12 @@ const enqueue = (fn) => {
   serial = task.catch(() => {});
   return task;
 };
-const read = () => chrome.storage.local.get(['config', 'state']);
+// Her okumada arayuz dili config'ten alinir: bildirim, hata ve WhatsApp metinleri secili dilde yazilir.
+const read = async () => {
+  const saved = await chrome.storage.local.get(['config', 'state']);
+  dilAyarla(saved.config?.language);
+  return saved;
+};
 const writeState = (state) => chrome.storage.local.set({state});
 
 async function scheduleQueryRetry(config, state) {
@@ -42,12 +48,12 @@ async function recordQueryFailure(state, config, account, pending, result, now) 
   const nextAt = retryable && config.enabled ? nextQueryRetryAt(now, used, config.schedule) : null;
   const priorRetry = state.queryRetries[account.id];
   const cycleId = priorRetry?.cycleId || state.batch?.cycleId || crypto.randomUUID();
-  let error = result.error || 'Sorgu tamamlanamadı. Resmî siteyi kontrol edin.';
+  let error = result.error || t('bg_query_failed');
   if (nextAt) {
-    error += ` Yeni kontrol: ${new Intl.DateTimeFormat('tr-TR', {timeZone: 'Europe/Istanbul',
-      dateStyle: 'short', timeStyle: 'short'}).format(nextAt)}.`;
+    error += t('bg_next_retry', {date: new Intl.DateTimeFormat(yerel(), {timeZone: 'Europe/Istanbul',
+      dateStyle: 'short', timeStyle: 'short'}).format(nextAt)});
   } else if (retryable && used >= 3) {
-    error += ' Üç otomatik tekrar da tamamlanamadı; sıradaki takvim zamanı beklenecek.';
+    error += t('bg_three_failed');
   }
   if (retryable) {
     state.queryRetries[account.id] = {applicationNumber: account.applicationNumber,
@@ -76,7 +82,7 @@ async function recordQueryFailure(state, config, account, pending, result, now) 
   }
   state.results[account.id] = {...state.results[account.id],
     applicationNumber: account.applicationNumber, lastError: error, lastAttemptAt: now, retryAt: nextAt};
-  state.lastError = 'En az bir başvuru kontrol edilemedi. Başvuru kartlarını inceleyin.';
+  state.lastError = t('bg_some_failed');
   state.batch.hadError = true;
 }
 
@@ -134,9 +140,9 @@ async function scheduleWhatsapp(config, state) {
   const compatible = matchingHeads.filter((event) => !event.blocked);
   if (!compatible.length) {
     if (matchingHeads.length) {
-      state.whatsapp.lastError ||= 'WhatsApp bağlantısını Ayarlar sayfasından kontrol edin.';
+      state.whatsapp.lastError ||= t('bg_wa_check_settings');
     } else {
-      state.whatsapp.lastError = 'Bekleyen değişikliğin alıcısı veya göndereni değişti. Eski kayıt farklı bir alıcıya yönlendirilmedi.';
+      state.whatsapp.lastError = t('bg_wa_target_changed');
     }
     await writeState(state);
     await chrome.alarms.clear(WA_DELIVERY);
@@ -270,6 +276,9 @@ async function initialize() {
   await chrome.storage.local.setAccessLevel({accessLevel: 'TRUSTED_CONTEXTS'});
   const saved = await read();
   const config = saved.config || {enabled: true, accounts: [], schedule: validateSchedule({})};
+  // 1.3.0: yeni kurulum Ingilizce acilir; dil alani olmayan eski kurulum Turkce kalir (WhatsApp mesajlari habersiz degismesin).
+  config.language = ['en', 'tr'].includes(config.language) ? config.language : (saved.config ? 'tr' : 'en');
+  dilAyarla(config.language);
   config.schedule = validateSchedule(config.schedule || {});
   config.whatsapp = validateWhatsappConfig(config.whatsapp);
   config.accounts = config.accounts.map((account) => ({...account,
@@ -300,7 +309,7 @@ async function startNext(state, config) {
     delete state.pending;
     if (!batch?.retry) state.nextDueAt = nextScheduledDue(config.schedule, Date.now());
     const hasErrors = config.accounts.some((account) => state.results[account.id]?.lastError);
-    if (hasErrors) state.lastError = 'En az bir başvuru kontrol edilemedi. Başvuru kartlarını inceleyin.';
+    if (hasErrors) state.lastError = t('bg_some_failed');
     else state.lastError = '';
     // All cases are independently recorded. A partial run is never "all unchanged".
     if (!batch?.hadError && !hasErrors) state.lastSuccessAt = Date.now();
@@ -314,14 +323,14 @@ async function startNext(state, config) {
     await chrome.alarms.clear(TIMEOUT);
     if (batch?.hadError || hasErrors) {
       await badge('!', '#ae3f30');
-      await notify('check-error', 'Başvuru kontrolü tamamlanamadı',
+      await notify('check-error', t('bg_n_check_failed_title'),
         Object.values(state.queryRetries || {}).some((retry) => Number.isFinite(retry.nextAt))
-          ? 'Geçici hata var; otomatik yeniden kontrol planlandı. Ayrıntılar eklentide.'
-          : 'Kontrol tamamlanamadı. Sıradaki takvim zamanı beklenecek. Ayrıntılar eklentide.');
+          ? t('bg_n_temp')
+          : t('bg_n_failed'));
     } else if (batch?.changed) {
-      await badge('YENİ');
-      await notify('status-changed', 'Başvuru durumunda değişiklik var',
-        'Güncel sonucu görmek için tıklayın.');
+      await badge(t('bg_badge_new'));
+      await notify('status-changed', t('bg_n_changed_title'),
+        t('bg_n_changed'));
     } else {
       await badge('');
     }
@@ -329,7 +338,7 @@ async function startNext(state, config) {
   }
   const accountId = state.batch.queue.shift();
   const account = config.accounts.find((item) => item.id === accountId);
-  if (!account) throw new Error('Başvuru ayarları bulunamadı.');
+  if (!account) throw new Error(t('bg_no_account'));
   let retryAttempt = 0;
   if (state.batch.retry) {
     const retry = state.queryRetries?.[accountId];
@@ -352,14 +361,14 @@ async function startNext(state, config) {
     state.pending.tabId = tab.id;
     await writeState(state);
   } catch {
-    await finishOne(state, config, {ok: false, retryable: true, error: 'Sorgu sekmesi açılamadı.'});
+    await finishOne(state, config, {ok: false, retryable: true, error: t('bg_tab_failed')});
   }
 }
 
 async function startBatch(manual = false) {
   const {config, state} = await read();
   if (state.batch) return {ok: true, running: true};
-  if (!config.accounts.length) throw new Error('Önce başvuru numarası ve PIN kaydedin.');
+  if (!config.accounts.length) throw new Error(t('bg_save_first'));
   if (!manual && (!config.enabled || Date.now() < state.nextDueAt)) {
     await schedule(config, state);
     return {ok: true};
@@ -425,9 +434,9 @@ async function finishOne(state, config, result) {
 
 async function saveConfig(message) {
   const {config: old, state} = await read();
-  if (state.batch) throw new Error('Kontrol devam ediyor. Kaydetmeden önce bitmesini bekleyin.');
+  if (state.batch) throw new Error(t('bg_running'));
   if (!Array.isArray(message.accounts) || message.accounts.length > 10) {
-    throw new Error('En fazla 10 başvuru ekleyebilirsiniz.');
+    throw new Error(t('bg_max10'));
   }
   const accounts = [];
   for (const item of message.accounts) {
@@ -436,17 +445,18 @@ async function saveConfig(message) {
     if (!applicationNumber) continue;
     if (!/^(?:[1-9]|10)$/.test(id) || !/^\d{1,12}\/\d{4}$/.test(applicationNumber)
       || accounts.some((a) => a.id === id || a.applicationNumber === applicationNumber)) {
-      throw new Error('Başvuru numaralarını numara/yıl biçiminde, tekrarlamadan girin.');
+      throw new Error(t('bg_number_format'));
     }
     const previous = old.accounts.find((a) => a.id === id && a.applicationNumber === applicationNumber);
     const pin = String(item.pin || '').trim() || previous?.pin;
-    if (!pin || pin.length > 100) throw new Error('Her yeni başvuru için PIN girin.');
+    if (!pin || pin.length > 100) throw new Error(t('bg_pin_needed'));
     const whatsappRecipients = normalizeRecipients(item.whatsappRecipients, previous?.whatsappRecipients);
     accounts.push({id, applicationNumber, pin, whatsappRecipients});
   }
   const config = {enabled: Boolean(message.enabled), accounts,
     schedule: validateSchedule(message.schedule || {}),
-    whatsapp: validateWhatsappConfig(message.whatsapp, old.whatsapp)};
+    whatsapp: validateWhatsappConfig(message.whatsapp, old.whatsapp),
+    language: old.language === 'tr' ? 'tr' : 'en'};
   for (const id of Object.keys(state.results)) {
     if (!accounts.some((a) => a.id === id && a.applicationNumber === state.results[id].applicationNumber)) {
       delete state.results[id];
@@ -489,18 +499,18 @@ function pageSender(sender) {
 }
 
 async function handle(message, sender) {
-  if (!message || sender.id !== chrome.runtime.id) return {ok: false, error: 'İstek reddedildi.'};
+  if (!message || sender.id !== chrome.runtime.id) return {ok: false, error: t('bg_rejected')};
   if (pageSender(sender)) {
     const {config, state} = await read();
     const job = state.pending;
     if (!job || job.tabId !== sender.tab.id) return {ok: true, job: null};
     if (Date.now() > job.deadline) {
-      await finishOne(state, config, {ok: false, retryable: true, error: 'Sorgu zaman aşımına uğradı. Siteyi kontrol edin.'});
-      return {ok: false, error: 'Zaman aşımı.'};
+      await finishOne(state, config, {ok: false, retryable: true, error: t('bg_timeout')});
+      return {ok: false, error: t('bg_timeout_short')};
     }
     const canonical = isOfficial(sender.url);
     if (!canonical && !['page-job', 'page-wait', 'page-error', 'page-clean-url', 'page-result'].includes(message.type)) {
-      return {ok: false, error: 'Doğrulamanın resmî sorgu adresine dönmesi bekleniyor.'};
+      return {ok: false, error: t('bg_wait_verif_return')};
     }
     const account = config.accounts.find((a) => a.id === job.accountId);
     if (message.type === 'page-job') {
@@ -509,10 +519,10 @@ async function handle(message, sender) {
         canCleanVerificationUrl: !canonical && job.phase === 'loading'
           && !job.submissionDocumentId && !job.cleanUrlOpened}};
     }
-    if (message.jobId !== job.id) return {ok: false, error: 'Sorgu eşleşmedi.'};
+    if (message.jobId !== job.id) return {ok: false, error: t('bg_job_mismatch')};
     if (message.type === 'page-wait' && message.reason === 'verification') {
       if (typeof sender.documentId !== 'string' || !sender.documentId) {
-        return {ok: false, error: 'Doğrulama belgesi doğrulanamadı.'};
+        return {ok: false, error: t('bg_verif_doc')};
       }
       job.waitingForVerification = true;
       const attentionShown = job.verificationAttentionShown;
@@ -521,15 +531,15 @@ async function handle(message, sender) {
       // Verification may need a foreground tab or a person. Notify only once for this job.
       if (!attentionShown) {
         try { await chrome.tabs.update(job.tabId, {active: true}); } catch {}
-        await notify(`verification-${job.id}`, 'Cloudflare doğrulaması var',
-          'Sorgu sekmesini açıp kontrol edin. Doğrulama bitince sorgu devam edecek.');
+        await notify(`verification-${job.id}`, t('bg_n_cf_title'),
+          t('bg_n_cf'));
       }
       return {ok: true};
     }
     if (message.type === 'page-clean-url') {
       if (canonical || job.phase !== 'loading' || job.submissionDocumentId || job.cleanUrlOpened
           || typeof sender.documentId !== 'string' || !sender.documentId) {
-        return {ok: false, error: 'Sorgu adresi yeniden açılmadı.'};
+        return {ok: false, error: t('bg_not_reopened')};
       }
       // An ordinary clean GET is allowed once, before any credential release/form submission.
       // The verification token is never rewritten while a challenge is active by the content script.
@@ -539,12 +549,12 @@ async function handle(message, sender) {
         await chrome.tabs.update(job.tabId, {url: TARGET});
         return {ok: true, cleaned: true};
       } catch {
-        return {ok: false, error: 'Sorgu sekmesi açılamadı. Sekmeyi kontrol edin.'};
+        return {ok: false, error: t('bg_tab_failed_check')};
       }
     }
     if (message.type === 'page-submit' && job.phase === 'loading') {
       if (typeof sender.documentId !== 'string' || !sender.documentId) {
-        return {ok: false, error: 'Sorgu belgesi doğrulanamadı.'};
+        return {ok: false, error: t('bg_submit_doc')};
       }
       // Persist the submission phase before releasing credentials. Reloads never resubmit.
       job.phase = 'submitted';
@@ -558,11 +568,11 @@ async function handle(message, sender) {
       // Only a new document loaded after form submission can supply the result.
       if (typeof sender.documentId !== 'string' || !sender.documentId
           || sender.documentId === job.submissionDocumentId) {
-        return {ok: false, error: 'Yeni sorgu sonucu bekleniyor.'};
+        return {ok: false, error: t('bg_wait_new_result')};
       }
       // Rendering can lag behind navigation; an absent summary is not a completed query.
       if (Array.isArray(message.messages) && !message.messages.some((text) => typeof text === 'string' && text.trim())) {
-        return {ok: false, waiting: true, error: 'Sorgu sonucu bekleniyor.'};
+        return {ok: false, waiting: true, error: t('bg_wait_result')};
       }
       const result = classifyResult(message.messages, account.applicationNumber);
       await finishOne(state, config, result);
@@ -570,29 +580,29 @@ async function handle(message, sender) {
     }
     if (message.type === 'page-error') {
       const safeErrors = {
-        challenge: 'Site insan doğrulaması istiyor. Açık sorgu sekmesini kontrol edin.',
-        form: 'Sorgu formu bulunamadı veya değişti. Resmî siteyi kontrol edin.',
-        submit: 'Sorgu gönderilemedi. Resmî siteyi kontrol edin.'
+        challenge: t('bg_err_challenge'),
+        form: t('bg_err_form'),
+        submit: t('bg_err_submit')
       };
       await finishOne(state, config, {ok: false, error: safeErrors[message.code] || safeErrors.form});
       return {ok: true};
     }
-    return {ok: false, error: 'Geçersiz sorgu adımı.'};
+    return {ok: false, error: t('bg_bad_step')};
   }
   // UI-only operations are never exposed to a website/content script.
   const optionsSender = sender.url === chrome.runtime.getURL('options.html');
   const popupSender = sender.url === chrome.runtime.getURL('popup.html');
   if ((!optionsSender && !popupSender) || sender.tab?.url?.startsWith('https:')) {
-    return {ok: false, error: 'İstek reddedildi.'};
+    return {ok: false, error: t('bg_rejected')};
   }
   if (['save-config', 'notification-test', 'whatsapp-status', 'whatsapp-test'].includes(message.type) && !optionsSender) {
-    return {ok: false, error: 'Bu işlem yalnızca Ayarlar sayfasından yapılabilir.'};
+    return {ok: false, error: t('bg_settings_only')};
   }
   if (message.type === 'ui-state') {
     const {config, state} = await read();
     // Queue delivery records and internal snapshots are not part of the UI contract.
     const {whatsappOutbox, manualCheckAlerts, ...visibleState} = state;
-    return {ok: true, config: {enabled: config.enabled, schedule: config.schedule, accounts: config.accounts.map(
+    return {ok: true, config: {enabled: config.enabled, language: config.language, schedule: config.schedule, accounts: config.accounts.map(
       ({id, applicationNumber, pin, whatsappRecipients}) => ({id, applicationNumber,
         hasPin: Boolean(pin), whatsappRecipients})),
       whatsapp: {enabled: config.whatsapp.enabled, senderPhone: config.whatsapp.senderPhone,
@@ -622,7 +632,7 @@ async function handle(message, sender) {
   if (message.type === 'whatsapp-test') {
     const {config} = await read();
     if (!config.whatsapp?.enabled || !config.whatsapp.senderPhone) {
-      return {ok: false, error: 'Önce WhatsApp bildirimini açıp gönderen numarasını kaydet.'};
+      return {ok: false, error: t('bg_wa_enable_first')};
     }
     if (!await whatsappPermission()) return {ok: false, error: whatsappErrorMessage('whatsapp_permission_required')};
     let recipients = null;
@@ -632,7 +642,7 @@ async function handle(message, sender) {
         for (const item of account.whatsappRecipients.phones) phones.add(item);
         for (const name of account.whatsappRecipients.groups) groups.set(groupKey(name), name);
       }
-      if (!phones.size && !groups.size) return {ok: false, error: 'Kayıtlı WhatsApp alıcısı yok. Başvurunun altındaki kişi / grup alanını doldurup kaydet.'};
+      if (!phones.size && !groups.size) return {ok: false, error: t('bg_no_recipients')};
       recipients = {phones: [...phones], groups: [...groups.values()]};
     }
     try {
@@ -640,19 +650,26 @@ async function handle(message, sender) {
       return result?.ok ? {ok: true, sent: result.sent} : {ok: false, error: whatsappErrorMessage(result?.error)};
     } catch (error) { return {ok: false, error: whatsappErrorMessage(error?.code)}; }
   }
+  if (message.type === 'set-language') {
+    // Dil pencereden de secilir: yalnizca config.language degisir, diger ayarlar ve kaydetme kurallari etkilenmez.
+    const {config} = await read();
+    config.language = dilAyarla(message.language);
+    await chrome.storage.local.set({config});
+    return {ok: true, language: config.language};
+  }
   if (message.type === 'save-config') return saveConfig(message);
   if (message.type === 'check-now') return startBatch(true);
   if (message.type === 'mark-read') { await badge(''); return {ok: true}; }
   if (message.type === 'notification-test') {
-    await notify('notification-test', 'Vatandaşlık Takip hazır', 'Bu bir deneme bildirimidir.');
+    await notify('notification-test', t('bg_n_test_title'), t('bg_n_test'));
     return {ok: true};
   }
-  return {ok: false, error: 'Bilinmeyen işlem.'};
+  return {ok: false, error: t('bg_unknown')};
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   enqueue(() => handle(message, sender)).then(sendResponse,
-    () => sendResponse({ok: false, error: 'İşlem tamamlanamadı. Eklentiyi yeniden açın.'}));
+    () => sendResponse({ok: false, error: t('bg_failed_reopen')}));
   return true;
 });
 chrome.notifications.onClicked.addListener(async () => {
@@ -668,7 +685,7 @@ chrome.runtime.onInstalled.addListener(() => enqueue(async () => {
 chrome.runtime.onStartup.addListener(() => enqueue(async () => {
   const {config, state} = await read();
   if (state.pending && state.pending.id === restoredPendingId) {
-    await finishOne(state, config, {ok: false, error: 'Tarayıcı kapanınca sorgu yarım kaldı. Şimdi kontrol et ile tekrar deneyin.'});
+    await finishOne(state, config, {ok: false, error: t('bg_browser_closed')});
   }
   if (!state.batch) await startBatch(false);
 }));
@@ -682,8 +699,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     if (state.pending && Date.now() >= state.pending.deadline) {
       await finishOne(state, config, {ok: false, retryable: true,
         error: state.pending.waitingForVerification
-          ? 'Cloudflare doğrulaması bitmedi. Sekmeyi açıp tamamla, sonra tekrar dene.'
-          : 'Sorgu 5 dakika içinde tamamlanamadı. Bağlantıyı ve açık sorgu sekmesini kontrol edin.'});
+          ? t('bg_cf_unfinished')
+          : t('bg_5min')});
     } else if (state.pending) {
       // An old query's queued timeout must never fail the next account in the batch.
       await chrome.alarms.create(TIMEOUT, {when: state.pending.deadline});

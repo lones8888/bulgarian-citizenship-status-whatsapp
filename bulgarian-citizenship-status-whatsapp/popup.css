@@ -50,3 +50,8 @@ button:disabled { opacity: .45; cursor: default; }
 button:focus-visible, summary:focus-visible { outline: 3px solid #8ebda0; outline-offset: 2px; }
 footer p { text-align: center; color: #8a978b; font-size: 9px; margin: 8px 0 0; }
 [hidden] { display: none !important; }
+.header-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.lang-switch { display: inline-flex; border: 1px solid #cbdacf; border-radius: 6px; overflow: hidden; background: #fff; }
+.lang-switch button { padding: 2px 7px; font-size: 9px; font-weight: 700; letter-spacing: .04em; border: 0; border-radius: 0; background: transparent; color: #46644f; line-height: 1.5; }
+.lang-switch button[aria-pressed="true"] { background: #216653; color: #fff; }
+.lang-switch button:hover:not([aria-pressed="true"]) { background: #eaf1e8; }

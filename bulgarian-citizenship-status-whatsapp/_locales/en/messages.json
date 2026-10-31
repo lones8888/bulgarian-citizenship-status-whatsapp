@@ -1,0 +1,11 @@
+{
+  "ext_name": {
+    "message": "Bulgarian Citizenship Status"
+  },
+  "ext_desc": {
+    "message": "Automatic tracking of up to 10 Bulgarian citizenship applications at the interval you choose, with WhatsApp notifications."
+  },
+  "ext_title": {
+    "message": "My applications"
+  }
+}

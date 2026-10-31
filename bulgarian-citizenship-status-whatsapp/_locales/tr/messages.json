@@ -1,0 +1,11 @@
+{
+  "ext_name": {
+    "message": "Bulgaristan Vatandaşlık Takip"
+  },
+  "ext_desc": {
+    "message": "En fazla 10 başvuru için istediğiniz aralıkta otomatik takip ve WhatsApp bildirimi."
+  },
+  "ext_title": {
+    "message": "Başvurularım"
+  }
+}

@@ -78,3 +78,7 @@ footer { color: #687e6f; font-size: 12px; line-height: 1.8; max-width: 850px; pa
 [hidden] { display: none !important; }
 @media (max-width: 750px) { main { padding: 30px 18px; } .page-header { gap: 14px; } .brand-mark { width: 44px; height: 44px; border-radius: 13px; font-size: 25px; } .columns { display: block; } .card { padding: 22px; } .notifications { display: block; } .notifications button { margin-top: 17px; } .result-message { font-size: 21px; } }
 .backup-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.lang-box { margin-left: auto; flex: 0 0 auto; min-width: 130px; }
+.lang-box label:not(.toggle-row) { margin: 0 0 5px; font-size: 12px; color: #577568; }
+.lang-box select { font-size: 14px; padding: 7px 9px; }
+@media (max-width: 750px) { .page-header { flex-wrap: wrap; } .lang-box { margin-left: 0; width: 100%; } }

@@ -1,31 +1,34 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vatandaşlık Takip</title>
+  <title data-i18n="app_short">Citizenship Status</title>
   <link rel="stylesheet" href="popup.css">
   <script src="popup.js" type="module"></script>
 </head>
 <body>
   <header>
-    <div class="brand"><span class="brand-mark" aria-hidden="true">✓</span><div><p class="eyebrow">BULGARİSTAN</p><h1>Vatandaşlık Takip</h1></div></div>
-    <span class="count" id="account-count" aria-label="Başvuru sayısı">—</span>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✓</span><div><p class="eyebrow" data-i18n="country_caps">BULGARIA</p><h1 data-i18n="app_short">Citizenship Status</h1></div></div>
+    <div class="header-side">
+      <span class="count" id="account-count" data-i18n-aria="pop_count_aria" aria-label="Number of applications">—</span>
+      <div class="lang-switch" role="group" data-i18n-aria="lang_label" aria-label="Language"><button type="button" data-dil="en" aria-pressed="true">EN</button><button type="button" data-dil="tr" aria-pressed="false">TR</button></div>
+    </div>
   </header>
   <div class="schedule-panel">
-    <div class="tracking-line"><span class="tracking" id="tracking">Yükleniyor…</span><span class="timezone">Türkiye saati</span></div>
-    <p class="next-label">Sonraki kontrol</p><p class="next-date" id="next-due">—</p>
+    <div class="tracking-line"><span class="tracking" id="tracking">Loading…</span><span class="timezone" data-i18n="turkey_time">Turkey time</span></div>
+    <p class="next-label" data-i18n="next_check">Next check</p><p class="next-date" id="next-due">—</p>
   </div>
   <main>
     <p class="global-error" id="last-error" hidden></p>
     <p class="whatsapp-status" id="whatsapp-delivery" hidden></p>
-    <section class="empty-state" id="empty-state" hidden><span aria-hidden="true">＋</span><h2>İlk başvurunu ekle</h2><p>Başvuru numarası, PIN ve kontrol takvimi için aşağıdaki <strong>Ayarlar</strong> düğmesini aç.</p></section>
-    <section id="accounts" aria-label="Başvurular ve son sonuçları"></section>
+    <section class="empty-state" id="empty-state" hidden><span aria-hidden="true">＋</span><h2 data-i18n="pop_empty_title">Add your first application</h2><p data-i18n-html="pop_empty_text">Open <strong>Settings</strong> below to enter the application number, PIN and check schedule.</p></section>
+    <section id="accounts" data-i18n-aria="pop_list_aria" aria-label="Applications and latest results"></section>
     <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
   </main>
   <footer>
-    <div class="actions"><button type="button" id="check" class="primary" disabled>Tümünü kontrol et</button><button type="button" id="settings" class="secondary">Ayarlar</button></div>
-    <p id="footer-note">Sonuçlar resmî sorgu sitesinden alınır.</p>
+    <div class="actions"><button type="button" id="check" class="primary" disabled>Check all</button><button type="button" id="settings" class="secondary" data-i18n="settings">Settings</button></div>
+    <p id="footer-note">Results come from the official status website.</p>
   </footer>
 </body>
 </html>

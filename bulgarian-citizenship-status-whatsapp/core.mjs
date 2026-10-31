@@ -1,3 +1,5 @@
+import { t, aktifDil } from "./i18n.mjs";
+
 const TIME_ZONE = "Europe/Istanbul";
 const localFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: TIME_ZONE,
@@ -9,7 +11,7 @@ const localFormatter = new Intl.DateTimeFormat("en-GB", {
 function validTime(timestamp) {
   if (typeof timestamp !== "number" || !Number.isFinite(timestamp)
       || Number.isNaN(new Date(timestamp).getTime())) {
-    throw new RangeError("Geçerli bir zaman damgası gerekiyor.");
+    throw new RangeError(t("core_bad_time"));
   }
   return timestamp;
 }
@@ -32,35 +34,35 @@ function localInstant(year, monthIndex, day, hour, minute) {
     if (next === candidate) return candidate;
     candidate = next;
   }
-  throw new RangeError("Aylık kontrol saati hesaplanamadı.");
+  throw new RangeError(t("core_month_calc"));
 }
 
 /** Validate and copy only the supported scheduling fields. */
 export function validateSchedule(input = {}) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
-    throw new RangeError('Kontrol sıklığı geçerli değil.');
+    throw new RangeError(t('core_bad_schedule'));
   }
   const mode = input.mode ?? 'monthly';
   if (!['monthly', 'weekly', 'days'].includes(mode)) {
-    throw new RangeError('Aylık, haftalık veya gün aralığı seçin.');
+    throw new RangeError(t('core_choose_mode'));
   }
   const integer = (value, fallback, min, max, label) => {
     const number = value === undefined ? fallback
       : typeof value === 'string' && value.trim() ? Number(value) : value;
     if (!Number.isInteger(number) || number < min || number > max) {
-      throw new RangeError(`${label} ${min} ile ${max} arasında olmalı.`);
+      throw new RangeError(t('core_range', { label, min, max }));
     }
     return number;
   };
   const time = input.time ?? '10:00';
   if (typeof time !== 'string' || !/^(?:[01]\d|2[0-3]):[0-5]\d$/u.test(time)) {
-    throw new RangeError('Saati SS:DD biçiminde girin.');
+    throw new RangeError(t('core_time_format'));
   }
   return {
     mode,
-    monthDay: integer(input.monthDay, 1, 1, 31, 'Ayın günü'),
-    weekDay: integer(input.weekDay, 1, 0, 6, 'Haftanın günü'),
-    days: integer(input.days, 7, 1, 365, 'Gün aralığı'),
+    monthDay: integer(input.monthDay, 1, 1, 31, t('lbl_monthday')),
+    weekDay: integer(input.weekDay, 1, 0, 6, t('lbl_weekday')),
+    days: integer(input.days, 7, 1, 365, t('lbl_days')),
     time,
   };
 }
@@ -103,38 +105,40 @@ export function normalizeStatus(text) {
   return typeof text === "string" ? text.replace(/\s+/gu, " ").trim() : "";
 }
 
-// Bilinen resmî durum cümleleri -> Türkçe (Ayarlar ekranındaki çeviriyle aynı metin). Bilinmeyen cümle için ""
-// döner: uydurma çeviri yapılmaz, mesajda resmî Bulgarca metin her zaman ayrıca bulunur.
-const TURKCE_DURUM = [
-  ["Преписката се намира в процедура по задължително съгласуване.", "Dosya zorunlu koordinasyon prosedüründedir."],
+// Bilinen resmî durum cümleleri -> seçili dilde çeviri (pencere, Ayarlar ve WhatsApp aynı metni kullanır). Bilinmeyen
+// cümle için "" döner: uydurma çeviri yapılmaz, mesajda resmî Bulgarca metin her zaman ayrıca bulunur.
+const DURUM_CEVIRI = [
+  ["Преписката се намира в процедура по задължително съгласуване.",
+    { tr: "Dosya zorunlu koordinasyon prosedüründedir.", en: "The file is in the mandatory coordination procedure." }],
 ];
-export function turkceDurum(status) {
+export function durumCevirisi(status, dil = aktifDil()) {
   const metin = normalizeStatus(status);
-  return TURKCE_DURUM.filter(([bg]) => metin.includes(bg)).map(([, tr]) => tr).join(" ");
+  return DURUM_CEVIRI.filter(([bg]) => metin.includes(bg)).map(([, ceviri]) => ceviri[dil] || ceviri.en).join(" ");
 }
+export const turkceDurum = (status) => durumCevirisi(status, "tr");
 
 /** Fail closed: a validation error or unfamiliar result is never "unchanged". */
 export function classifyResult(messages, applicationNumber) {
   const fail = (error) => ({ ok: false, error });
   if (typeof applicationNumber !== "string" || !/^\d+\/\d{4}$/u.test(applicationNumber)) {
-    return fail("Başvuru numarası geçerli değil.");
+    return fail(t("core_bad_number"));
   }
   if (!Array.isArray(messages) || messages.some((m) => typeof m !== "string")) {
-    return fail("Sorgu sonucu okunamadı. Siteyi açıp kontrol edin.");
+    return fail(t("core_unreadable"));
   }
   const values = messages.map(normalizeStatus).filter(Boolean);
   if (values.length !== 1 || values[0].length > 8000) {
-    return fail("Tek bir doğrulanmış başvuru sonucu bulunamadı. Siteyi açıp kontrol edin.");
+    return fail(t("core_no_single"));
   }
   const value = values[0];
   const match = /^Образувана преписка\s+N\s*:\s*(\d+\/\d{4})(?![\p{L}\p{N}/])\s*\.\s*(.+)$/iu.exec(value);
   if (!match || match[1] !== applicationNumber) {
-    return fail("Başvuru durumu doğrulanamadı. PIN'i ve sitedeki sonucu kontrol edin.");
+    return fail(t("core_not_verified"));
   }
   const tail = match[2];
   if ((tail.match(/\p{L}/gu) || []).length < 8
       || /(?:\b(?:captcha|invalid|required|error|PIN)\b|невалид|неверен|грешка|ПИН)/iu.test(tail)) {
-    return fail("Site geçerli bir durum yerine hata döndürdü. Siteyi açıp kontrol edin.");
+    return fail(t("core_site_error"));
   }
   return { ok: true, status: value };
 }
