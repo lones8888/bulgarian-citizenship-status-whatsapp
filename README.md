@@ -1,4 +1,4 @@
-# Bulgarian Citizenship Status WhatsApp
+# Bulgarian Citizenship Status WhatsApp – Chrome Extension
 
 **Bulgaristan Vatandaşlık Takip: istediğin aralıkta otomatik takip ve WhatsApp bildirimi.**
 
