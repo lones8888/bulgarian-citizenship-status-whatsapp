@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vatandaşlık Takip</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" type="module"></script>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✓</span><div><p class="eyebrow">BULGARİSTAN</p><h1>Vatandaşlık Takip</h1></div></div>
+    <span class="count" id="account-count" aria-label="Başvuru sayısı">—</span>
+  </header>
+  <div class="schedule-panel">
+    <div class="tracking-line"><span class="tracking" id="tracking">Yükleniyor…</span><span class="timezone">Türkiye saati</span></div>
+    <p class="next-label">Sonraki kontrol</p><p class="next-date" id="next-due">—</p>
+  </div>
+  <main>
+    <p class="global-error" id="last-error" hidden></p>
+    <p class="whatsapp-status" id="whatsapp-delivery" hidden></p>
+    <section class="empty-state" id="empty-state" hidden><span aria-hidden="true">＋</span><h2>İlk başvurunu ekle</h2><p>Başvuru numarası, PIN ve kontrol takvimi için aşağıdaki <strong>Ayarlar</strong> düğmesini aç.</p></section>
+    <section id="accounts" aria-label="Başvurular ve son sonuçları"></section>
+    <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+  </main>
+  <footer>
+    <div class="actions"><button type="button" id="check" class="primary" disabled>Tümünü kontrol et</button><button type="button" id="settings" class="secondary">Ayarlar</button></div>
+    <p id="footer-note">Sonuçlar resmî sorgu sitesinden alınır.</p>
+  </footer>
+</body>
+</html>

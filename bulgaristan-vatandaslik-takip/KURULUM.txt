@@ -1,0 +1,143 @@
+Bulgaristan Vatandaşlık Takip — 1.2.7
+
+Masaüstü Google Chrome ve Brave için hazırlanmış yerel eklenti.
+API anahtarı veya ücretli bir servis gerektirmez.
+
+BAŞKA BİLGİSAYARA KURULUM
+1. ZIP dosyasını açın.
+2. İçindeki bulgaristan-vatandaslik-takip klasörünü kalıcı bir yere koyun.
+   Kurduktan sonra bu klasörü silmeyin veya taşımayın.
+3. Chrome'da chrome://extensions/ veya Brave'de brave://extensions/ açın.
+4. Geliştirici modu seçeneğini açın.
+5. Paketlenmemiş öğe yükle düğmesine basın.
+6. manifest.json dosyasının bulunduğu bulgaristan-vatandaslik-takip klasörünü seçin.
+   ZIP dosyasını veya manifest.json dosyasını tek başına seçmeyin.
+7. Eklenti simgesine basıp küçük listeden Ayarlar düğmesine basın.
+   Ayar ekranında en fazla on başvuru numarası ve ilgili PIN'leri girin.
+   Kullanmayacağınız başvuru satırlarını boş bırakın.
+8. Kontrol aralığını ve saati seçip Bilgileri kaydet düğmesine basın.
+9. Tümünü şimdi kontrol et ile ilk sorguyu yapın. Sonuçları kontrol edin.
+10. Test bildirimi gönder düğmesiyle sistem bildirimlerini kontrol edin.
+
+KÜÇÜK LİSTE
+Tarayıcıdaki eklenti simgesine basınca yeni bir sekme açılmaz.
+Başvurular ve son durumları küçük bir pencerede listelenir.
+Tümünü kontrol et ile elle sorgu yapabilirsiniz.
+Tam ayar sayfası yalnızca Ayarlar düğmesine bastığınızda açılır.
+
+MEVCUT KURULUMU GÜNCELLEME
+Aynı klasör kullanılıyorsa Uzantılar ekranında
+Bulgaristan Vatandaşlık Takip kartındaki Yeniden yükle simgesine basın.
+Başvuru bilgileri ve PIN'ler korunur. Klasörü tekrar yüklemeyin/eklentiyi kaldırmayın.
+Başka bilgisayarda ZIP'teki yeni dosyaları önceki kurulum klasörüne kopyalayıp
+Uzantılar ekranında Yeniden yükle'ye basabilirsiniz.
+
+KONTROL ARALIĞI
+Varsayılan: Her ayın 1'i, Türkiye saatiyle 10.00.
+Seçenekler: Aylık, haftalık veya 1–365 günde bir.
+Aylık seçimde 29–31 gibi bir gün o ayda yoksa ayın son günü kullanılır.
+Bütün başvurular aynı seçilen takvimde, sırayla sorgulanır.
+Gün aralığı seçilirse sonraki tarih, kayıttan/son kontrolden N takvim günü
+sonrası için seçtiğiniz saatte hesaplanır.
+Elle yapılan kontrol bir sonraki kontrol tarihini yeniden hesaplar.
+Takip seçeneğini kapatarak otomatik sorguları durdurabilirsiniz.
+
+ÇALIŞMA BİÇİMİ
+Kontrol için Chrome veya Brave çalışmalı, internet bağlı olmalıdır.
+Tarayıcı kapalıysa kaçırılan kontrol, tarayıcı yeniden açıldığında yapılır.
+Mac uykudaysa eklenti Mac'i uyandırmaz; uyandığında kontrol devam eder.
+Başarılı sonuçlar ve en son 36 sorgu eklentinin içinde saklanır.
+İlk sorgu karşılaştırma için başlangıç sonucunu kaydeder. Sonraki anlamlı
+değişikliklerde bildirim gösterilir; aynı sonuç için bildirim verilmez.
+Hata olursa ayrı gösterilir; eski sonuç güncel bir başarı gibi sunulmaz.
+İnsan doğrulaması gerekirse eklenti bunu çözmez. Sorgu sekmesini inceleyin,
+gerekli işlemi kendiniz yapın, sonra Tümünü şimdi kontrol et ile tekrar deneyin.
+Site formu veya sonuç metni değişirse eklentinin güncellenmesi gerekebilir.
+Bildirim görünmüyorsa sistemde tarayıcı bildirimlerini ve Odak modunu kontrol edin.
+
+WHATSAPP WEB BİLDİRİMLERİ
+1. Eklentinin kurulu olduğu tarayıcı profilinde WhatsApp Web'e giriş yapın.
+2. Eklenti > Ayarlar'da gönderen WhatsApp hesabınızın numarasını uluslararası
+   biçimde girin. Bu alan yanlış hesaptan mesaj gitmesini önlemek için kontrol edilir.
+3. Her başvurunun altındaki WhatsApp numaraları ve grup adlarını ayrı doldurun.
+   Birden fazla numarayı virgülle veya ayrı satırlarda yazabilirsiniz.
+   Grup adını WhatsApp'ta göründüğü gibi yazın. Aynı isimde birden fazla grup
+   varsa gönderim durur; belirsiz bir gruba mesaj gönderilmez.
+4. Alıcı alanlarını boş bıraktığınız başvuru yalnızca eklentide takip edilir.
+5. WhatsApp gönderimini açıp kaydedin. Tarayıcının yalnızca web.whatsapp.com
+   için istediği site erişim iznini onaylayın.
+6. WhatsApp Web bağlantısını kontrol et düğmesi, hesabı ve grup eşleşmelerini
+   mesaj göndermeden kontrol eder.
+7. Kendime test mesajı gönder düğmesi, aynı gönderim yolunu kullanarak yalnızca
+   gönderen numaranın kendisine (WhatsApp'ta "kendime mesaj") bir deneme gönderir.
+   Alıcılara test mesajı gönder, kayıtlı bütün kişi ve gruplara bir deneme gönderir.
+   İkisi de başvuru bilgisi ve PIN içermez. Mesaj gelirse WhatsApp yolu çalışıyordur.
+
+Eklenti her başvurunun son durumunu ve WhatsApp'a gönderilen son mesaj kaydını tarayıcının
+eklentiye ayrılmış yerel alanında tutar; her kontrolde yeni metni kayıtlı metinle karşılaştırır.
+Varsayılan: yalnızca durum DEĞİŞİNCE o dosyanın seçili alıcılarına başvuru numarası,
+Türkçe durum (tanımlıysa) ve resmî Bulgarca metin gönderilir. PIN mesajlara eklenmez.
+Gönderim kontrol biter bitmez başlar; WhatsApp Web hazır değilse 1, 2, 4... dakika sonra yeniden denenir. İki seçenek açılabilir:
+- Mevcut durumu bir kez gönder: o dosya için WhatsApp'a henüz hiç mesaj gitmediyse, sonraki
+  kontrolde o anki durum bir kez gönderilir ("takip başladı"). Gönderildikten sonra tekrar gitmez.
+- Değişiklik olmasa da her kontrolde gönder: her kontrolde "değişiklik yok" mesajı gider.
+Boş sonuç veya sorgu hatası hiçbir zaman WhatsApp mesajı oluşturmaz.
+Brave/Chrome çalışırken mevcut WhatsApp Web sekmesi kullanılır. Sekme yoksa
+arka planda açılabilir. Ek bir bot, terminal komutu veya Mac servisi çalıştırılmaz.
+WhatsApp oturumu kapanmışsa yeniden giriş gerekir. Mesaj bu sırada bekler.
+Gönderilen alıcılar ayrı ayrı kaydedilir; aynı değişiklik için tamamlanan alıcıya
+yeniden gönderim yapılmaz. Gönderim sonucu belirsiz kaldığında otomatik tekrar
+yerine kontrol uyarısı gösterilebilir. Gerçek teslim durumu WhatsApp'ta görülebilir.
+Bekleyen mesajdan sonra alıcı ayarı değişirse eski mesaj yeni alıcıya yönlendirilmez.
+Aynı dosyada WhatsApp bildirimini yalnızca bir tarayıcı/bilgisayarda açın;
+bağımsız kurulumlar aynı değişiklik için ayrı ayrı mesaj oluşturabilir.
+WhatsApp Web'in yapısı değişirse bağlantı bileşeninin güncellenmesi gerekebilir.
+
+WhatsApp desteği, paketin içinde yerel olarak bulunan WPPConnect WA-JS
+bileşenini kullanır. Bu bileşen WhatsApp'ın resmî bir eklentisi değildir.
+Lisans ve kaynak bilgileri vendor/ klasöründedir.
+
+BAŞVURU BİLGİLERİ
+Bu paket herhangi bir PIN içermez. Her kurulumda PIN'leri kendiniz girersiniz.
+PIN'ler yalnızca ilgili tarayıcı profilinin yerel eklenti alanında tutulur;
+Chrome senkronizasyonuna veya başka bir sunucuya gönderilmez.
+Sorguda yalnızca https://publicbg.mjs.bg/BgInfo/Home/Enroll adresine gönderilir.
+Yerel eklenti saklama alanı macOS Anahtar Zinciri ile şifrelenmez.
+Chrome ve Brave birbirinden bağımsızdır. Bilgiler birinden diğerine kopyalanmaz.
+Aynı başvuruyu iki tarayıcıda da etkinleştirirseniz ikisi ayrı kontrol yapar.
+Kayıtlı PIN'i değiştirmek istemiyorsanız ayar ekranındaki PIN alanını boş bırakın.
+Başvuruyu kaldırmak için o satırdaki numarayı ve PIN'i temizleyip kaydedin.
+
+KALDIRMA
+Tarayıcının Uzantılar ekranında Bulgaristan Vatandaşlık Takip > Kaldır seçin.
+Bu işlem o tarayıcıdaki yerel ayarları ve kayıtları kaldırır.
+
+Eklenti bağımsız hazırlanmıştır; Bakanlığın resmî bir eklentisi değildir.
+Yalnızca mevcut başvuru durumunu sorgular, başvuruyu değiştirmez.
+
+CLOUDFLARE VE GEÇİCİ SUNUCU HATALARI (1.2.4)
+İlk sorgu sayfası önde açılır; form hazır olana kadar en fazla 5 dakika beklenir.
+Doğrulama gerekirse sekme öne alınır ve bir kez bildirim gösterilir.
+Kutucuk/insan onayı varsa kullanıcı tamamlar; eklenti bunu otomatik çözmez.
+Doğrulama aynı sayfa içinde bitse bile sorgu kendisi devam eder.
+Yalnızca __cf_chl adres ekleri için, form gönderilmeden önce temiz sorgu adresi
+bir kez normal şekilde açılabilir. Form gönderildikten sonra aynı denemede
+ikinci form gönderimi veya temiz adresle yeniden açma yapılmaz.
+Geçici hata olduğunda yalnızca başarısız dosyalar yeni sekmeyle yeniden kontrol
+edilir: ilk hatadan 15 dakika sonra, sonraki hatadan 1 saat sonra, sonrakinden
+3 saat sonra. En fazla 3 otomatik tekrar yapılır. Hafta sonuna denk gelen
+tekrar, pazartesi ayarlı kontrol saatine bırakılır. Yanlış PIN gibi sonuçlar
+otomatik tekrarlanmaz. İlk sayfa forma ulaşamazsa diğer dosyalar boş yere açılmaz.
+Üç otomatik tekrar da başarısızsa otomatik tekrar durur; ! işareti kalır,
+sıradaki takvim zamanı beklenir. Dosyanın kayıtlı WhatsApp alıcılarına bu
+kontrol döngüsü için bir kez başarısız kontrol bildirimi gönderilir. WhatsApp
+oturumu kapalıysa bu bildirim sırada kalır; anında teslim garantisi verilmez.
+
+ELLE KONTROL GEREKLİ BİLDİRİMİ (1.2.5)
+Otomatik tekrarla düzelmeyecek hatalarda (site cevabı beklenenden farklı,
+sorgu formu değişmiş ya da PIN kabul edilmemiş) dosyanın WhatsApp alıcılarına
+bir kez "Elle kontrol gerekli" mesajı gider. Mesajda PIN ve sitenin hata metni
+yoktur. Aynı dosya başarıyla sorgulanana kadar bu mesaj tekrar gönderilmez.
+
+AD DEĞİŞİKLİĞİ (1.2.7)
+Eklentinin adı Bulgaristan Vatandaşlık Takip oldu. Çalışma biçimi ve ayarlar aynı.

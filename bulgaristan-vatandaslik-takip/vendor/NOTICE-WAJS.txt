@@ -1,0 +1,5 @@
+WPPConnect WA-JS 4.7.2
+Source: https://github.com/wppconnect-team/wa-js
+Package: https://www.npmjs.com/package/@wppconnect/wa-js
+License: Apache-2.0 (see LICENSE-WAJS.txt)
+The bundled code is loaded locally; no remote script updates are fetched.

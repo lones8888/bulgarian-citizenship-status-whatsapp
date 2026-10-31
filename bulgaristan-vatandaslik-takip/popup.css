@@ -1,0 +1,52 @@
+:root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1c302c; background: #f3f6f2; color-scheme: light; font-size: 13px; line-height: 1.5; }
+* { box-sizing: border-box; }
+body { width: 380px; max-height: 560px; margin: 0; display: flex; flex-direction: column; overflow: hidden; }
+header { display: flex; align-items: center; justify-content: space-between; padding: 19px 20px 16px; flex: 0 0 auto; }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark { width: 37px; height: 37px; background: #216653; color: #fff; display: grid; place-items: center; border-radius: 11px; font-size: 23px; font-weight: 600; }
+.eyebrow { font-size: 9px; letter-spacing: .16em; font-weight: 700; color: #64806e; margin: 0 0 2px; }
+h1 { font-size: 17px; letter-spacing: -.025em; font-weight: 650; margin: 0; line-height: 1.25; }
+.count { background: #e6eee5; border-radius: 20px; padding: 5px 9px; color: #46644f; font-size: 11px; font-weight: 650; }
+.schedule-panel { background: #fff; border: 1px solid #dde6dc; border-radius: 11px; padding: 12px 14px; margin: 0 20px 12px; flex: 0 0 auto; }
+.tracking-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.tracking { display: inline-flex; align-items: center; font-weight: 650; font-size: 11px; color: #2c6e4d; gap: 5px; }
+.tracking::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #4c916a; }
+.tracking.paused { color: #7e714e; }
+.tracking.paused::before { background: #b29455; }
+.timezone { font-size: 10px; color: #859185; }
+.next-label { font-size: 10px; color: #718174; margin: 0 0 1px; }
+.next-date { margin: 0; font-size: 13px; font-weight: 600; color: #34523e; }
+main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 20px; scrollbar-width: thin; }
+.account { border: 1px solid #dde6dc; background: #fff; border-radius: 11px; margin: 0 0 10px; padding: 13px 14px; }
+.account-heading { display: flex; align-items: center; justify-content: space-between; gap: 9px; margin: 0 0 7px; }
+.account h2 { font-size: 14px; letter-spacing: -.015em; margin: 0; font-weight: 650; }
+.status-label { color: #718174; background: #f0f5ef; padding: 3px 6px; font-size: 9px; border-radius: 5px; flex: 0 0 auto; }
+.status-label.warning { color: #98652a; background: #fff3df; }
+.status-text { margin: 0 0 9px; font-size: 12px; line-height: 1.6; color: #365440; overflow-wrap: anywhere; }
+.unqueried { color: #718174; }
+.checked-at { color: #8a978b; font-size: 10px; margin: 0; }
+.account-error, .global-error { color: #995139; background: #fff3eb; border: 1px solid #f2dccc; border-radius: 7px; font-size: 11px; padding: 9px 10px; margin: 9px 0; overflow-wrap: anywhere; }
+.global-error { margin-top: 0; }
+.whatsapp-status { color: #577a61; background: #eaf2e7; border: 1px solid #d7e5d0; border-radius: 7px; font-size: 10px; line-height: 1.6; padding: 8px 10px; margin: 0 0 10px; overflow-wrap: anywhere; }
+.whatsapp-status.error { color: #995139; background: #fff3eb; border-color: #f2dccc; }
+details { margin: 8px 0; color: #687e6e; font-size: 10px; }
+summary { cursor: pointer; color: #557661; }
+details p { margin: 7px 0 0; padding: 8px 9px; background: #f7f9f5; border-radius: 6px; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.empty-state { text-align: center; padding: 16px 13px 22px; color: #718174; }
+.empty-state > span { display: block; color: #47795a; font-size: 28px; margin-bottom: 3px; }
+.empty-state h2 { font-size: 15px; font-weight: 600; color: #3c5c46; margin: 0 0 7px; }
+.empty-state p { font-size: 12px; line-height: 1.7; margin: 0; }
+.feedback { font-size: 11px; line-height: 1.5; color: #31724e; margin: 0 0 10px; overflow-wrap: anywhere; }
+.feedback:empty { display: none; }
+.feedback.error { color: #995139; }
+footer { flex: 0 0 auto; background: #f3f6f2; border-top: 1px solid #dfe8dd; padding: 12px 20px 10px; }
+.actions { display: grid; grid-template-columns: 1fr 100px; gap: 8px; }
+button { font-family: inherit; font-weight: 650; font-size: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; line-height: 1.3; }
+.primary { background: #216653; color: #fff; border-color: #216653; }
+.primary:hover { background: #184d3f; }
+.secondary { background: #fff; color: #3f664d; border-color: #cbdacf; }
+.secondary:hover { background: #eaf1e8; }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, summary:focus-visible { outline: 3px solid #8ebda0; outline-offset: 2px; }
+footer p { text-align: center; color: #8a978b; font-size: 9px; margin: 8px 0 0; }
+[hidden] { display: none !important; }

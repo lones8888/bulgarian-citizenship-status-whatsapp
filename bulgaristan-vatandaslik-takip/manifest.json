@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Bulgaristan Vatandaşlık Takip",
+  "version": "1.2.7",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl5kc60Bd+1aVx0IPv0W51to4pyjZ4yapKUqtu3xASuBcc4CGqLj2C/07HwL49jlPzNQfISnAcwBhAm7nEL1Up8Sg/3K1nLl4zsPmNJmDYicxLgcJkiOaoPSIq0bGNe0SPA6n72wkGlFaKEs05j7tAF+bhRXXLW3qPxW/lcASpwuJqUpKozMz5b5mEC88jK7l9NpsGhmMN5DUDWiEUp3SMQb4AjoRSyPgf6Ye3P4G64CAiZ8/6UNRXvuabH3+KH8eT7Ae2X9oM38fjqCOqjwyLHsIpvuu569aRzIweuoGwlw5f0h583r37ntNAqtlz5vBUMFL5var8Atw0X3iDyjGyQIDAQAB",
+  "description": "En fazla 10 başvuru için istediğiniz aralıkta otomatik takip ve WhatsApp bildirimi.",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "alarms",
+    "storage",
+    "notifications",
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://publicbg.mjs.bg/BgInfo/Home/Enroll*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_title": "Başvurularım",
+    "default_icon": "icon128.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "128": "icon128.png"
+  },
+  "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  }
+}
